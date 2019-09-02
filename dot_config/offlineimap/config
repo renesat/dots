@@ -1,0 +1,93 @@
+[general]
+accounts = Paradox, MainMail
+#, EduPolitech
+pythonfile = ~/.config/offlineimap/pass.py
+
+[DEFAULT]
+
+###############
+## paradox ##
+###############
+
+[Account Paradox]
+localrepository = LocalParadox
+remoterepository = RepositoryParadox
+synclabels = yes
+# labelsheader = X-Keywords
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalParadox]
+type = Maildir
+localfolders = ~/.mail/paradox
+# nametrans = nametrans
+
+[Repository RepositoryParadox]
+type = IMAP
+remotehost = imap.rambler.ru
+remoteusereval = get_pass("paradox")["user"]
+remotepasseval = get_pass("paradox")["password"]
+# folderfilter = folder_filter
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+# nametrans = nametrans_reverse
+
+#######################
+## Edu politech mail ##
+#######################
+
+[Account EduPolitech]
+localrepository = LocalEduPolitech
+remoterepository = RepositoryEduPolitech
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+maxconnections = 2
+
+[Repository LocalEduPolitech]
+type = Maildir
+localfolders = ~/.mail/edu-politech
+# nametrans = nametrans
+
+[Repository RepositoryEduPolitech]
+type = IMAP
+remotehost = outlook.office365.com
+auth_mechanisms = PLAIN
+remoteusereval = get_pass("edu-politech")["user"]
+remotepasseval = get_pass("edu-politech")["password"]
+folderfilter = lambda name: not name.startswith('Calendar')
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+# nametrans = nametrans_reverse
+
+###############
+## MainMail ##
+###############
+
+[Account MainMail]
+localrepository = LocalMainMail
+remoterepository = RepositoryMainMail
+synclabels = yes
+# labelsheader = X-Keywords
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalMainMail]
+type = GmailMaildir
+localfolders = ~/.mail/mainmail
+# nametrans = nametrans
+
+[Repository RepositoryMainMail]
+type = Gmail
+remoteusereval = get_pass("mainmail")["user"]
+remotepasseval = get_pass("mainmail")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
+# nametrans = nametrans_reverse
