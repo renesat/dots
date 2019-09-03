@@ -8,6 +8,8 @@
 ;; General settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;
 
+(set-frame-parameter (selected-frame) 'alpha '(90 . 50))
+
 ;; Keys
 (after! evil
   (setq doom-leader-key "SPC")
