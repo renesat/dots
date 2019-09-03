@@ -1,8 +1,8 @@
-;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
+;;; config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here
 
-;; Code:
+;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; General settings ;;
