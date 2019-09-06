@@ -4,7 +4,7 @@
 ;;;;;;;;;;;;
 ;; Python ;;
 ;;;;;;;;;;;;
-(package! poetry :recipe (:host github :repo "DarkNoys/poetry.el"))
+(package! poetry :recipe (:host github :repo "renesat/poetry.el"))
 (package! py-yapf)
 (package! py-isort)
 
