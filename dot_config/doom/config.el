@@ -8,7 +8,7 @@
 ;; General settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(set-frame-parameter (selected-frame) 'alpha '(90 . 50))
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 
 ;; Keys
 (after! evil
