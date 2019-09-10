@@ -106,14 +106,14 @@
   ;;     (user-mail-address      . ,(password-store-get "mail/edu-politech"))
   ;;     (mu4e-compose-signature . "---\nEdu Politech"))
   ;;   t)
-  (set-email-account! "MainMail"
-    `((mu4e-sent-folder       . "/mainmail/Sent Mail")
-      (mu4e-drafts-folder     . "/mainmail/Drafts")
-      (mu4e-trash-folder      . "/mainmail/Trash")
-      (mu4e-refile-folder     . "/mainmail/All Mail")
-      (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
-      (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
-      (mu4e-compose-signature . "---\nMain Mail")))
+  ;; (set-email-account! "MainMail"
+  ;;   `((mu4e-sent-folder       . "/mainmail/Sent Mail")
+  ;;     (mu4e-drafts-folder     . "/mainmail/Drafts")
+  ;;     (mu4e-trash-folder      . "/mainmail/Trash")
+  ;;     (mu4e-refile-folder     . "/mainmail/All Mail")
+  ;;     (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
+  ;;     (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
+  ;;     (mu4e-compose-signature . "---\nMain Mail")))
   (set-email-account! "Paradox"
     `((mu4e-sent-folder       . "/paradox/Sent Mail")
       (mu4e-drafts-folder     . "/paradox/Drafts")
@@ -121,7 +121,8 @@
       (mu4e-refile-folder     . "/paradox/All Mail")
       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
       (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
-      (mu4e-compose-signature . "---\nParadox"))))
+      (mu4e-compose-signature . "---\nParadox"))
+    t))
 
 
 ;;;;;;;;;;;;;;;;;;;
