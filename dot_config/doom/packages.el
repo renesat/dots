@@ -1,6 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; packages.el
 
+;;; Code:
+
 ;;;;;;;;;;;;
 ;; Python ;;
 ;;;;;;;;;;;;

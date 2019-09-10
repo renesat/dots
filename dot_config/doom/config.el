@@ -22,6 +22,9 @@
  doom-font (font-spec :family "mononoki" :size 14)
  doom-variable-pitch-font (font-spec :family "Noto Sans" :size 14))
 
+;; Pretty symbol
+(global-prettify-symbols-mode +1)
+
 ;;;;;;;;;;;;
 ;; Python ;;
 ;;;;;;;;;;;;
