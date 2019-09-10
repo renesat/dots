@@ -90,6 +90,7 @@
        ;; vterm             ; another terminals in Emacs
 
        :tools
+       org-brain
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
