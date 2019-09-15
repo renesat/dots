@@ -164,9 +164,7 @@ actionKeys conf =
   [ ("<Print>", spawn screenshot)
   , ("M-t", spawn (notifyCMD ++ " \"Time:\" \"$(date +%x)\n$(date +%R)\"")) -- time
   , ("M-S-t", namedScratchpadAction scratchpads "tray") -- Tray
-  , ("M-f", do { toggleScreenSpacingEnabled
-               ; toggleWindowSpacingEnabled
-               ; sendMessage  $ Toggle FULL})
+  , ("M-f", sendMessage $ Toggle FULL)
   , ("M-S-f", withFocused $ windows . W.sink)
   ]
 
