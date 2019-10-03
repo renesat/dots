@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: left arrow
+# key: larw
+# uuid: larw
+# --
+←$0

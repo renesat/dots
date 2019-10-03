@@ -164,3 +164,10 @@
         (setq org-pandoc-options-for-latex-pdf
               '((pdf-engine-opt . "-shell-escape")
                 (pdf-engine . "xelatex")))))
+
+;;;;;;;;;;;;;;
+;; Snippets ;;
+;;;;;;;;;;;;;;
+
+(after! snippets
+  (setq yas-indent-line 'fixed))
