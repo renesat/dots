@@ -82,12 +82,18 @@
         +icons)          ; colorful icons for dired-mode
 
        electric          ; smarter, keyword-based electric-indent
+       ;;ibuffer         ; interactive buffer management
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
        eshell            ; a consistent, cross-platform shell (WIP)
        ;; term              ; terminals in Emacs
        ;; vterm             ; another terminals in Emacs
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       spell             ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
 
        :tools
        org-brain
@@ -98,8 +104,6 @@
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ein               ; tame Jupyter notebooks with emacs ???
        eval              ; run code, run (also, repls)
-       flycheck          ; tasing you for every semicolon you forget
-       ;;flyspell          ; tasing you for misspelling mispelling
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
@@ -127,20 +131,21 @@
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        ;;erlang            ; an elegant language for a more civilized age
-       ;;elixir            ; erlang done right
+       elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ess               ; emacs speaks statistics
        ;;fsharp           ; ML stands for Microsoft's Language
        ;;go                ; the hipster dialect
        (haskell
-        +lsp)
+        +dante)
+        ;; +lsp)
         ;;+intero) ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
-       ;;julia             ; a better, faster MATLAB
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        scheme            ; a fully conniving family of lisps
        latex             ; writing papers in Emacs has never been so fun
