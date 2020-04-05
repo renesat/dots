@@ -95,7 +95,7 @@ myTerminal = "kitty" -- Terminal
 browser = "firefox" -- Browser
 fileManager = terminalExecCommand myTerminal "env ranger" -- File manager
 lockScreen = "betterlockscreen -l" -- lockScreen
-appMenu = "rofi -combi-modi drun,run -show combi -modi combi -show-icons" -- application menu
+appMenu = "rofi -theme base16-nord -combi-modi drun,run -show combi -modi combi -show-icons" -- application menu
 notifyCMD = "dunstify"
 
 -- Screenshots
