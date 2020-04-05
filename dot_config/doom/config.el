@@ -75,21 +75,14 @@
                        :latex-compiler
                        ("xelatex -interaction nonstopmode -output-directory %o %f")
                        :image-converter
-                       ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+                       ("convert -density %D -trim -antialias %f -quality 100 %O")))))
 
-  ;; Src blocks
-  (map! :map org-mode-map
-        :localleader
-        (:prefix "e"
-          (:prefix ("p" . "latex")
-            :desc "to latex" "l" #'org-pandoc-export-to-latex
-            :desc "to latex & open" "L" #'org-pandoc-export-to-latex-and-open
-            :desc "to latex pdf" "p" #'org-pandoc-export-to-latex-pdf
-            :desc "to latex pdf & open" "P" #'org-pandoc-export-to-latex-pdf-and-open))
-        (:prefix ("o" . "src")
-          :desc "previous block" "p" #'org-babel-previous-src-block
-          :desc "next block" "n" #'org-babel-next-src-block
-          :desc "execute block" "e" #'org-babel-execute-src-block)))
+;;;;;;;;
+;; JS ;;
+;;;;;;;;
+
+(after! (:any js2-mode rjsx-mode web-mode)
+  (setq js2-basic-offset 2))
 
 ;;;;;;;;;;;;
 ;; Ledger ;;
@@ -128,34 +121,34 @@
 ;; Email ;;
 ;;;;;;;;;;;
 
-(after! mu4e
-  (setq +mu4e-backend 'offlineimap)
-  ;; (set-email-account! "EduPolitech"
-  ;;   `((mu4e-sent-folder       . "/edu-politech/Sent Mail")
-  ;;     (mu4e-drafts-folder     . "/edu-politech/Drafts")
-  ;;     (mu4e-trash-folder      . "/edu-politech/Trash")
-  ;;     (mu4e-refile-folder     . "/edu-politech/All Mail")
-  ;;     (smtpmail-smtp-user     . ,(password-store-get "mail/edu-politech"))
-  ;;     (user-mail-address      . ,(password-store-get "mail/edu-politech"))
-  ;;     (mu4e-compose-signature . "---\nEdu Politech"))
-  ;;   t)
-  (set-email-account! "MainMail"
-    `((mu4e-sent-folder       . "/mainmail/Sent Mail")
-      (mu4e-drafts-folder     . "/mainmail/Drafts")
-      (mu4e-trash-folder      . "/mainmail/Trash")
-      (mu4e-refile-folder     . "/mainmail/All Mail")
-      (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
-      (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
-      (mu4e-compose-signature . "---\nMain Mail")))
-  (set-email-account! "Paradox"
-    `((mu4e-sent-folder       . "/paradox/Sent Mail")
-      (mu4e-drafts-folder     . "/paradox/Drafts")
-      (mu4e-trash-folder      . "/paradox/Trash")
-      (mu4e-refile-folder     . "/paradox/All Mail")
-      (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
-      (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
-      (mu4e-compose-signature . "---\nParadox"))
-    t))
+;; (after! mu4e
+;;   (setq +mu4e-backend 'offlineimap)
+;;   ;; (set-email-account! "EduPolitech"
+;;   ;;   `((mu4e-sent-folder       . "/edu-politech/Sent Mail")
+;;   ;;     (mu4e-drafts-folder     . "/edu-politech/Drafts")
+;;   ;;     (mu4e-trash-folder      . "/edu-politech/Trash")
+;;   ;;     (mu4e-refile-folder     . "/edu-politech/All Mail")
+;;   ;;     (smtpmail-smtp-user     . ,(password-store-get "mail/edu-politech"))
+;;   ;;     (user-mail-address      . ,(password-store-get "mail/edu-politech"))
+;;   ;;     (mu4e-compose-signature . "---\nEdu Politech"))
+;;   ;;   t)
+;;   (set-email-account! "MainMail"
+;;     `((mu4e-sent-folder       . "/mainmail/Sent Mail")
+;;       (mu4e-drafts-folder     . "/mainmail/Drafts")
+;;       (mu4e-trash-folder      . "/mainmail/Trash")
+;;       (mu4e-refile-folder     . "/mainmail/All Mail")
+;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
+;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
+;;       (mu4e-compose-signature . "---\nMain Mail")))
+;;   (set-email-account! "Paradox"
+;;     `((mu4e-sent-folder       . "/paradox/Sent Mail")
+;;       (mu4e-drafts-folder     . "/paradox/Drafts")
+;;       (mu4e-trash-folder      . "/paradox/Trash")
+;;       (mu4e-refile-folder     . "/paradox/All Mail")
+;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
+;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
+;;       (mu4e-compose-signature . "---\nParadox"))
+;;     t))
 
 
 ;;;;;;;;;;;;;;;;;;;
@@ -163,10 +156,18 @@
 ;;;;;;;;;;;;;;;;;;;
 
 (after! ox-pandoc
+  (setq org-latex-listings 'minted
+        org-latex-packages-alist '(("" "minted")))
+  (setq org-latex-pdf-process
+      (mapcar
+       (lambda (s)
+         (replace-regexp-in-string "%latex " "%latex -shell-escape " s))
+       org-latex-pdf-process))
   (setq org-latex-to-pdf-process
-        (setq org-pandoc-options-for-latex-pdf
-              '((pdf-engine-opt . "-shell-escape")
-                (pdf-engine . "xelatex")))))
+       (setq org-pandoc-options-for-latex-pdf
+             '((pdf-engine-opt . "-shell-escape")
+               (filter . "pandoc-minted")
+               (pdf-engine . "xelatex")))))
 
 ;;;;;;;;;;;;;;
 ;; Snippets ;;
