@@ -62,6 +62,8 @@ import XMonad.Actions.Promote (promote)
 
 import XMonad.Actions.CycleWS
 
+import XMonad.Actions.CopyWindow
+
 import Data.Default (def)
 import Data.Map.Strict (Map)
 
@@ -153,33 +155,36 @@ mediaKeys _ =
 -- Navigation keys
 navKeys :: XConfig Layout -> [(String, X ())]
 navKeys conf =
-  -- Window focus and swap
-  [ ("M-"++modif++key, fun direct inf) 
-    | (key, direct) <- directKeys
-    , (fun, modif, inf) <- [ (Nav.windowSwap, "S-", False)
-                           , (Nav.windowGo, "", True)]
-  ]
-  -- Move window to Master
-  ++
-  [ ("M-<L>", sendMessage Expand) 
-  , ("M-<R>", sendMessage Shrink) ]
-  ++
-  [ ("M-]", nextWS) 
-  , ("M-[", prevWS) ]
-  ++
-  [ ("M-S-m", promote) ]
-  -- Workspace focus and move windows to workspace
-  ++
-  [ ("M-"++modif++wid,  windows $ fun wname) 
-    | (wname, wid) <- zip (workspaces conf)
-                          (map show ([1 .. 9] ++ [0]))
-    , (fun, modif) <- [ (W.shift, "S-")
-                      , (W.greedyView, "")]]
-  where 
-  directKeys = [("j", Nav.D), 
-                ("k", Nav.U),
-                ("l", Nav.R),
-                ("h", Nav.L)]
+ [ ("M-o", windows copyToAll) -- @@ Make focused window always visible
+ , ("M-S-o",  killAllOtherCopies)] -- @@ Toggle window state back
+ ++
+ -- Window focus and swap
+ [ ("M-"++modif++key, fun direct inf) 
+   | (key, direct) <- directKeys
+   , (fun, modif, inf) <- [ (Nav.windowSwap, "S-", False)
+                          , (Nav.windowGo, "", True)]
+ ]
+ -- Move window to Master
+ ++
+ [ ("M-<L>", sendMessage Expand) 
+ , ("M-<R>", sendMessage Shrink) ]
+ ++
+ [ ("M-]", nextWS) 
+ , ("M-[", prevWS) ]
+ ++
+ [ ("M-S-m", promote) ]
+ -- Workspace focus and move windows to workspace
+ ++
+ [ ("M-"++modif++wid,  windows $ fun wname) 
+   | (wname, wid) <- zip (workspaces conf)
+                         (map show ([1 .. 9] ++ [0]))
+   , (fun, modif) <- [ (W.shift, "S-")
+                     , (W.greedyView, "")]]
+ where 
+ directKeys = [("j", Nav.D), 
+               ("k", Nav.U),
+               ("l", Nav.R),
+               ("h", Nav.L)]
 
 -- Actions
 actionKeys :: XConfig Layout -> [(String, X ())]
