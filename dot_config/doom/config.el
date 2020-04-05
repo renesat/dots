@@ -7,7 +7,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; General settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 
 ;; Keys
 (after! evil
@@ -15,6 +15,9 @@
   (setq doom-leader-alt-key "M-SPC")
   (setq doom-localleader-key ",")
   (setq doom-localleader-alt-key "M-,"))
+
+;; Theme
+(load-theme 'base16-nord t)
 
 ;;; Fonts
 (setq
