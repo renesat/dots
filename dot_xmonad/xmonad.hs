@@ -20,6 +20,7 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 
+
 -- Scratchpad
 import XMonad.Util.NamedScratchpad
 
@@ -29,10 +30,16 @@ import XMonad.Layout.NoBorders
 -- Correct FS
 import XMonad.Hooks.EwmhDesktops
 
+-- Mouse resize
+import XMonad.Actions.MouseResize
+import XMonad.Layout.WindowArranger
+import qualified XMonad.Actions.FlexibleManipulate as Flex
+
 -- StackSet
 import qualified XMonad.StackSet as W
 
 -- Mouse
+--
 import XMonad.Actions.UpdateFocus
 
 
@@ -53,6 +60,7 @@ import XMonad.Actions.Navigation2D as Nav-- Window navigation
 -- Move to master
 import XMonad.Actions.Promote (promote)
 
+import XMonad.Actions.CycleWS
 
 import Data.Default (def)
 import Data.Map.Strict (Map)
@@ -67,7 +75,7 @@ main = do
     , focusFollowsMouse  = True
     , modMask            = mod1Mask
     , keys               = myKeys
-    , layoutHook         = myLayout
+    , layoutHook         = mouseResize $ windowArrange $ myLayout
     , manageHook         = myManageHook
     , handleEventHook    = handleEventHook def <+> fullscreenEventHook <+> focusOnMouseMove
     , startupHook        = myStartupHook
@@ -83,7 +91,7 @@ main = do
 
 myTerminal = "kitty" -- Terminal
 browser = "firefox" -- Browser
-fileManager = terminalExecCommand myTerminal "ranger" -- File manager
+fileManager = terminalExecCommand myTerminal "env ranger" -- File manager
 lockScreen = "betterlockscreen -l" -- lockScreen
 appMenu = "rofi -combi-modi drun,run -show combi -modi combi -show-icons" -- application menu
 notifyCMD = "dunstify"
@@ -102,6 +110,18 @@ terminalExecCommand t c | t == "kitty" = "kitty" ++ " " ++ c
                         | otherwise = t ++ " -e " ++ c
 
  
+sendNotify text = spawn (notifyCMD ++ " " ++  "\"" ++ text ++  "\"")
+
+statusReport = foldl (++) "" [
+	  "Time:\n $(date +%x)\n $(date +%R)"
+	, "\n"
+	, "Battery:\n $(cat " ++ batPath ++ "/capacity)% ($(cat " ++ batPath ++ "/status))"
+	]
+	where 
+	batPath = "/sys/class/power_supply/BAT0"
+
+sendStatusReport = sendNotify statusReport
+
 ------------------
 -- Key bindings -- 
 ------------------
@@ -144,6 +164,9 @@ navKeys conf =
   [ ("M-<L>", sendMessage Expand) 
   , ("M-<R>", sendMessage Shrink) ]
   ++
+  [ ("M-]", nextWS) 
+  , ("M-[", prevWS) ]
+  ++
   [ ("M-S-m", promote) ]
   -- Workspace focus and move windows to workspace
   ++
@@ -162,17 +185,19 @@ navKeys conf =
 actionKeys :: XConfig Layout -> [(String, X ())]
 actionKeys conf =
   [ ("<Print>", spawn screenshot)
-  , ("M-t", spawn (notifyCMD ++ " \"Time:\" \"$(date +%x)\n$(date +%R)\"")) -- time
+  , ("M-t", sendStatusReport) -- status
   , ("M-S-t", namedScratchpadAction scratchpads "tray") -- Tray
   , ("M-f", sendMessage $ Toggle FULL)
   , ("M-S-f", withFocused $ windows . W.sink)
+  , ("M-r", withFocused $ Flex.mouseWindow Flex.linear)
   ]
 
 
 -- Applications keys
 appKeys :: XConfig Layout -> [(String, X ())]
 appKeys l =
-  [ ("M-b", spawn browser) , ("M-p", spawn lockScreen)
+  [ ("M-b", spawn browser)
+  , ("M-p", spawn lockScreen)
   , ("M-m", spawn fileManager)
   , ("M-<Return>", spawn $ terminal l)
   , ("M-d", spawn appMenu)
@@ -189,11 +214,11 @@ myLayout = (id
                False
                (Border 6 6 6 6)
                True
-  $ Tall 1 (10/100) (2/3) |||
-    Grid |||
-    ThreeColMid 1 (3/100) (1/2) |||
-    Mirror (Tall 1 (3/100) (1/2)))
-  |||
+  $
+  ThreeColMid 1 (3/100) (1/2) |||
+  Tall 1 (10/100) (2/3) |||
+  Grid |||
+  Mirror (Tall 1 (3/100) (1/2))) |||
   noBorders Full
 
 ----------------
@@ -210,6 +235,8 @@ myWorkspaces = [ "1:term"
 -----------------
 myManageHook = composeAll
     [ className =? "stalonetray" --> doF W.focusDown
+    , ((appName =? "Picture-in-Picture") <&&> (className =? "firefox")) --> doFloat
+    , className =? "MEGAsync" --> doFloat
     , isFullscreen --> doFullFloat
     , namedScratchpadManageHook scratchpads ]
 
@@ -221,6 +248,7 @@ myStartupHook = spawnHooks <+> adjustEventInput
     spawnHooks = foldl1 (>>) $ map (\x -> spawn x) commands
     commands = [ "compton"
                , "nitrogen --restore"
+	       , "blueman-applet"
                , "keynav"]
            
 ---------------
