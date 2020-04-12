@@ -17,7 +17,12 @@
   (setq doom-localleader-alt-key "M-,"))
 
 ;; Theme
-(load-theme 'base16-nord t)
+(load-theme 'nord t)
+;; (set-face-attribute 'font-lock-comment-face nil
+                    ;; :foreground "#81A1C1") ; nord9
+;; (set-face-attribute 'vertical-border nil
+                    ;; :foreground "#EBCB8B") ; nord13
+;; (load-theme 'base16-nord t)
 
 ;;; Fonts
 (setq

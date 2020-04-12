@@ -7,7 +7,8 @@
 ;; Theme ;;
 ;;;;;;;;;;;
 
-(package! base16-theme)
+;; (package! base16-theme)
+(package! nord-theme)
 
 ;;;;;;;;;;;;
 ;; Python ;;
@@ -22,5 +23,4 @@
 
 (package! ob-julia :recipe
   (:host github
-   :repo "phrb/ob-julia"
-   :files ("*.el")))
+   :repo "phrb/ob-julia"))
