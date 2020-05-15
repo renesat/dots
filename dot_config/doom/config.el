@@ -82,12 +82,30 @@
                        :image-converter
                        ("convert -density %D -trim -antialias %f -quality 100 %O")))))
 
+;;;;;;;;;;;
+;; Julia ;;
+;;;;;;;;;;;
+
+
+
+(setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
+                                                    (:session . "jl")
+                                                    (:kernel . "julia-1.4")))
+;; (setq lsp-julia-default-environment "~/.julia/environments/v1.4")
+
+;; (after! (:and julia-mode julia-formatter)
+;;   (add-hook 'julia-mode-hook
+;;             '(lambda() (julia-formatter-server-start))))
+
 ;;;;;;;;
 ;; JS ;;
 ;;;;;;;;
 
-(after! (:any js2-mode rjsx-mode web-mode)
-  (setq js2-basic-offset 2))
+(defun my-js-mode-hook ()
+  (setq indent-tabs-mode nil
+        ;; tab-width 2
+        js-indent-level 4))
+(add-hook 'js-mode-hook 'my-js-mode-hook)
 
 ;;;;;;;;;;;;
 ;; Ledger ;;
@@ -160,7 +178,26 @@
 ;; Lecture notes ;;
 ;;;;;;;;;;;;;;;;;;;
 
-(after! ox-pandoc
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+              '("empty"
+                "\\documentclass{article}
+                [NO-DEFAULT-PACKAGES]
+                [NO-PACKAGES]"
+                ("\\section{%s}" . "\\section*{%s}")
+                ("\\subsection{%s}" . "\\subsection*{%s}")
+                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("empty-beamer" "\\documentclass[presentation]{beamer}
+                 [NO-DEFAULT-PACKAGES]
+                 [NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+
   (setq org-latex-listings 'minted
         org-latex-packages-alist '(("" "minted")))
   (setq org-latex-pdf-process
@@ -180,3 +217,15 @@
 
 (after! snippets
   (setq yas-indent-line 'fixed))
+
+(defun r-env ()
+  (setq exec-path
+        (append exec-path
+                '("/home/renesat/Apps/MyR/bin")))
+  (setenv "R_HOME"
+          "/home/renesat/Apps/MyR/lib64/R")
+  (setenv "PATH"
+          (concat
+           "/home/renesat/Apps/MyR/bin:"
+           (getenv "PATH"))))
+(add-hook 'org-mode-hook 'r-env)

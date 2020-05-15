@@ -96,7 +96,6 @@
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
-       org-brain
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
@@ -121,8 +120,8 @@
        ;;wakatime
 
        :lang
+       yaml
        ;;agda              ; types of types of types of types...
-       assembly          ; assembly for fun or debugging
        cc                ; C/C++/Obj-C madness
        clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
@@ -145,7 +144,7 @@
        ;;idris             ;
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        javascript        ; all(hope(abandon(ye(who(enter(here))))))
-       julia             ; a better, faster MATLAB
+       (julia +lsp)             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        scheme            ; a fully conniving family of lisps
        latex             ; writing papers in Emacs has never been so fun
@@ -156,8 +155,9 @@
        nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
+        +brain
+        +jupyter
         +dragndrop       ; file drag & drop support
-        +ipython         ; ipython support for babel
         +pandoc          ; pandoc integration into org's exporter
         +present)        ; using Emacs for presentations
        ;;perl              ; write code no one else can comprehend

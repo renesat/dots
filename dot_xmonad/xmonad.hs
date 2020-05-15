@@ -242,6 +242,7 @@ myManageHook = composeAll
     [ className =? "stalonetray" --> doF W.focusDown
     , ((appName =? "Picture-in-Picture") <&&> (className =? "firefox")) --> doFloat
     , className =? "MEGAsync" --> doFloat
+    , className =? "Extension: (Tree Style Tab) - Close tabs? - Mozilla Firefox" --> doFloat
     , isFullscreen --> doFullFloat
     , namedScratchpadManageHook scratchpads ]
 

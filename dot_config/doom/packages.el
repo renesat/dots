@@ -21,6 +21,15 @@
 ;; Julia ;;
 ;;;;;;;;;;;
 
-(package! ob-julia :recipe
+;; (package! ob-julia :recipe
+;;   (:host github
+;;    :repo "phrb/ob-julia"))
+(package! julia-formatter :recipe
   (:host github
-   :repo "phrb/ob-julia"))
+   :repo "ki-chi/julia-formatter"))
+
+;;;;;;;;;;
+;; SCAD ;;
+;;;;;;;;;;
+
+(package! scad-mode)
