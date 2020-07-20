@@ -1,0 +1,235 @@
+#+TITLE: Offlineimap config
+
+* TOC :toc:
+- [[#scripts][Scripts]]
+  - [[#pass][pass]]
+- [[#mail-config][Mail config]]
+  - [[#general-configs][General configs]]
+  - [[#accounts][Accounts]]
+
+* Scripts
+** pass
+:PROPERTIES:
+:header-args:    :tangle pass.py
+:END:
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+from subprocess import check_output
+
+def get_pass(account):
+    """ Return pass login and passwword
+    """
+    data = check_output("/usr/bin/env pass mail/" + account,
+                        shell=True).splitlines()
+    password = data[0]
+    tmp = [
+        x for x in data
+        if x.lower().startswith(('address:', 'login:', 'user:', 'mail:'))
+    ]
+    user = ""
+    if tmp:
+        user = tmp[0].split(":", 1)[1].strip()
+
+    return {"password": password, "user": user}
+
+def folder_filter(name):
+    """ Filter folder
+    """
+    return (name in ["Archives", "Drafts", "INBOX", "Sent", "Spam", "Trash"]
+            or name.startswith("Mailspring"))
+#+END_SRC
+
+* Mail config
+:PROPERTIES:
+:header-args:    :tangle config
+:END:
+** General configs
+
+#+BEGIN_SRC conf
+[general]
+accounts = Paradox, MainMail, EduPolitech, MainYandex, OldYandex
+pythonfile = ~/.config/offlineimap/pass.py
+
+[DEFAULT]
+
+#+END_SRC
+
+** Accounts
+*** Paradox
+
+#+BEGIN_SRC conf
+#############
+## paradox ##
+#############
+
+[Account Paradox]
+localrepository = LocalParadox
+remoterepository = RepositoryParadox
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalParadox]
+type = Maildir
+localfolders = ~/.mail/paradox
+
+[Repository RepositoryParadox]
+type = IMAP
+remotehost = imap.rambler.ru
+remoteusereval = get_pass("paradox")["user"]
+remotepasseval = get_pass("paradox")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+#+END_SRC
+
+*** Politech mail
+
+#+BEGIN_SRC conf
+#######################
+## Edu politech mail ##
+#######################
+
+[Account EduPolitech]
+localrepository = LocalEduPolitech
+remoterepository = RepositoryEduPolitech
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+maxconnections = 2
+
+[Repository LocalEduPolitech]
+type = Maildir
+localfolders = ~/.mail/edu-politech
+
+[Repository RepositoryEduPolitech]
+type = IMAP
+remotehost = outlook.office365.com
+auth_mechanisms = PLAIN
+remoteusereval = get_pass("edu-politech")["user"]
+remotepasseval = get_pass("edu-politech")["password"]
+folderfilter = lambda name: not name.startswith('Calendar')
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+#+END_SRC
+
+*** Main mail
+
+#+BEGIN_SRC conf
+###############
+## MainMail ##
+###############
+
+[Account MainMail]
+localrepository = LocalMainMail
+remoterepository = RepositoryMainMail
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalMainMail]
+type = GmailMaildir
+localfolders = ~/.mail/mainmail
+
+[Repository RepositoryMainMail]
+type = Gmail
+remoteusereval = get_pass("mainmail")["user"]
+remotepasseval = get_pass("mainmail")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
+#+END_SRC
+
+*** Main yandex mail
+
+#+BEGIN_SRC conf
+#################
+## main-yandex ##
+#################
+
+[Account MainYandex]
+localrepository = LocalMainYandex
+remoterepository = RepositoryMainYandex
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalMainYandex]
+type = Maildir
+localfolders = ~/.mail/main-yandex
+
+[Repository RepositoryMainYandex]
+type = IMAP
+remotehost = imap.yandex.ru
+remoteusereval = get_pass("main-yandex")["user"]
+remotepasseval = get_pass("main-yandex")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+#+END_SRC
+
+*** Old yandex mail
+
+#+BEGIN_SRC conf
+################
+## old-yandex ##
+################
+
+[Account OldYandex]
+localrepository = LocalOldYandex
+remoterepository = RepositoryOldYandex
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalOldYandex]
+type = Maildir
+localfolders = ~/.mail/old-yandex
+
+[Repository RepositoryOldYandex]
+type = IMAP
+remotehost = imap.yandex.ru
+remoteusereval = get_pass("old-yandex")["user"]
+remotepasseval = get_pass("old-yandex")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+#+END_SRC
+
+*** TheRedBishop
+
+#+BEGIN_SRC conf
+##################
+## theredbishop ##
+##################
+
+[Account TheRedBishop]
+localrepository = LocalTheRedBishop
+remoterepository = RepositoryTheRedBishop
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalTheRedBishop]
+type = GmailMaildir
+localfolders = ~/.mail/theredbishop
+
+[Repository RepositoryTheRedBishop]
+type = Gmail
+remoteusereval = "ien4Eiw*ou" #get_pass("redbishop")["user"]
+remotepasseval = "theredbishop42@gmail.com" # get_pass("redbishop")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
+#+END_SRC

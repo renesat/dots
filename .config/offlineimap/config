@@ -1,0 +1,158 @@
+[general]
+accounts = Paradox, MainMail, EduPolitech, MainYandex, OldYandex
+pythonfile = ~/.config/offlineimap/pass.py
+
+[DEFAULT]
+
+#############
+## paradox ##
+#############
+
+[Account Paradox]
+localrepository = LocalParadox
+remoterepository = RepositoryParadox
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalParadox]
+type = Maildir
+localfolders = ~/.mail/paradox
+
+[Repository RepositoryParadox]
+type = IMAP
+remotehost = imap.rambler.ru
+remoteusereval = get_pass("paradox")["user"]
+remotepasseval = get_pass("paradox")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+#######################
+## Edu politech mail ##
+#######################
+
+[Account EduPolitech]
+localrepository = LocalEduPolitech
+remoterepository = RepositoryEduPolitech
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+maxconnections = 2
+
+[Repository LocalEduPolitech]
+type = Maildir
+localfolders = ~/.mail/edu-politech
+
+[Repository RepositoryEduPolitech]
+type = IMAP
+remotehost = outlook.office365.com
+auth_mechanisms = PLAIN
+remoteusereval = get_pass("edu-politech")["user"]
+remotepasseval = get_pass("edu-politech")["password"]
+folderfilter = lambda name: not name.startswith('Calendar')
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+###############
+## MainMail ##
+###############
+
+[Account MainMail]
+localrepository = LocalMainMail
+remoterepository = RepositoryMainMail
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalMainMail]
+type = GmailMaildir
+localfolders = ~/.mail/mainmail
+
+[Repository RepositoryMainMail]
+type = Gmail
+remoteusereval = get_pass("mainmail")["user"]
+remotepasseval = get_pass("mainmail")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
+
+#################
+## main-yandex ##
+#################
+
+[Account MainYandex]
+localrepository = LocalMainYandex
+remoterepository = RepositoryMainYandex
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalMainYandex]
+type = Maildir
+localfolders = ~/.mail/main-yandex
+
+[Repository RepositoryMainYandex]
+type = IMAP
+remotehost = imap.yandex.ru
+remoteusereval = get_pass("main-yandex")["user"]
+remotepasseval = get_pass("main-yandex")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+################
+## old-yandex ##
+################
+
+[Account OldYandex]
+localrepository = LocalOldYandex
+remoterepository = RepositoryOldYandex
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalOldYandex]
+type = Maildir
+localfolders = ~/.mail/old-yandex
+
+[Repository RepositoryOldYandex]
+type = IMAP
+remotehost = imap.yandex.ru
+remoteusereval = get_pass("old-yandex")["user"]
+remotepasseval = get_pass("old-yandex")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+##################
+## theredbishop ##
+##################
+
+[Account TheRedBishop]
+localrepository = LocalTheRedBishop
+remoterepository = RepositoryTheRedBishop
+synclabels = yes
+utf8foldernames = yes
+maxconnections = 2
+
+[Repository LocalTheRedBishop]
+type = GmailMaildir
+localfolders = ~/.mail/theredbishop
+
+[Repository RepositoryTheRedBishop]
+type = Gmail
+remoteusereval = "ien4Eiw*ou" #get_pass("redbishop")["user"]
+remotepasseval = "theredbishop42@gmail.com" # get_pass("redbishop")["password"]
+realdelete = no
+ssl = true
+sslcacertfile = /usr/local/etc/openssl/cert.pem  # This will only work for macOS
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
