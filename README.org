@@ -1,3 +1,0 @@
-#+TITLE: Dots
-
-My config files. I use [[https://github.com/twpayne/chezmoi/][chezmoi]] for manage my configs.
