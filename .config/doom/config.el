@@ -1,0 +1,457 @@
+(after! evil
+  (setq doom-leader-key "SPC")
+  (setq doom-leader-alt-key "M-SPC")
+  (setq doom-localleader-key ",")
+  (setq doom-localleader-alt-key "M-,"))
+
+(load-theme 'zenburn t)
+
+(load-theme 'zenburn t)
+
+(setq
+ doom-font (font-spec :family "mononoki" :size 14)
+ doom-variable-pitch-font (font-spec :family "Noto Sans" :size 14))
+
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+
+(global-prettify-symbols-mode +1)
+
+(after! org
+  (setq org-directory (concat (getenv "HOME")
+                              "/org"))
+  (setq +org-capture-todo-file (concat org-directory
+                                       "/todo.org"))
+  (setq +org-capture-notes-file (concat org-directory
+                                        "/note.org"))
+  (setq org-roam-directory (concat org-directory
+                                   "/tuntemus/org")))
+
+(after! org
+  (setq org-log-done 'time
+        org-log-into-drawer t
+        org-log-done t
+        org-log-reschedule t
+        org-log-redeadline t
+        org-enable-priority-commands nil)
+  (setq org-todo-keywords
+        '((sequence "TODO(t@/!)" "WIP(w@/!)"
+                    "PROJ(p@/!)" "IDEA(i@/!)"
+                    "NEXT(n@/!)" "WAITING(m@/!)"
+                    "|" "DONE(d@/!)"
+                    "CANCELED(c@/!)"
+                    "DELEGATED(l@/!)"
+                    "SOMEDAY(f@/!)")
+          (sequence "[ ]" "|" "[X]" "[-]")))
+
+  (setq org-todo-keyword-faces
+        '(("PROJ" . (:foreground "#aee8e4" :weight bold))
+          ("IDEA"  . (:foreground "#b7d4ff" :weight bold))
+          ("WAIT" . +org-todo-onhold)
+          ("HOLD" . +org-todo-onhold)))
+  ;; Org superstar
+  (setq org-superstar-special-todo-items t
+        org-superstar-prettify-item-bullets t))
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-block-separator "-----------------------"
+        ;; org-agenda-compact-blocks t
+        org-agenda-start-day nil ;; i.e. today
+        org-agenda-span 1
+        org-agenda-start-on-weekday nil)
+  (setq org-agenda-custom-commands
+        '(("c" "Super view"
+           ((agenda "" ((org-agenda-overriding-header "Today")
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t
+                            :date today
+                            :order 1)
+                           (:name "Habit"
+                            :date today
+                            :habit t
+                            :order 2)
+                           (:name "Overdue"
+                            :deadline past
+                            :order 3)
+                           (:name "Scheduled Soon"
+                            :scheduled future
+                            :order 4)))))
+            (alltodo "" ((org-agenda-overriding-header "Tasks")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:discard (:not (:file-path "projects.org")))
+                            (:name "Next to do"
+                             :todo "NEXT"
+                             :order 1)
+                            (:name "Today's tasks"
+                             :file-path "journal/")
+                            (:name "Due Today"
+                             :deadline today
+                             :order 2)
+                            (:name "Important"
+                             :priority "A"
+                             :order 6)
+                            (:name "Meetings"
+                             :and (:tag "meet" :scheduled future)
+                             :order 10)
+                            (:name "Projects"
+                             :todo "PROJ"
+                             :order 15)
+                            (:name "All habit"
+                             :habit t
+                             :order 20)))))
+            (alltodo "" ((org-agenda-overriding-header "Tasks")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:name "Next to do"
+                             :todo "NEXT"
+                             :order 1)
+                            (:name "Today's tasks"
+                             :file-path "journal/")
+                            (:name "Due Today"
+                             :deadline today
+                             :order 2)
+                            (:name "Important"
+                             :priority "A"
+                             :order 6)
+                            (:name "Meetings"
+                             :and (:tag "meet" :scheduled future)
+                             :order 10)
+                            (:name "Projects"
+                             :todo "PROJ"
+                             :order 15)
+                            (:name "All habit"
+                             :habit t
+                             :order 20)
+                            (:discard (:not (:todo "TODO")))))))))))
+  :config
+  (org-super-agenda-mode))
+
+;;;;;;;;;;;;;;
+;; Calendar ;;
+;;;;;;;;;;;;;;
+
+(after! org-gcal
+  (setq org-gcal-client-id (auth-source-pass-get "client-id" "gcal-api")
+        org-gcal-client-secret (auth-source-pass-get "client-secret" "gcal-api")
+        org-gcal-file-alist `((,(auth-source-pass-get "mail" "gcal-api") . ,(concat org-directory "/gcal.org")))))
+
+(after! org
+  (setq org-capture-templates
+        (doct '(("Personal todo" :keys "t"
+                 :file +org-capture-todo-file
+                 :headline "Inbox"
+                 :prepend t
+                 :template ("* %{todo-state} %?"
+                            ":PROPERTIES:"
+                            ":Created: %U"
+                            ":END:"
+                            ""
+                            "%i"
+                            "%a")
+                 :todo-state "TODO")
+                ("Personal notes" :keys "n"
+                 :file +org-capture-notes-file
+                 :headline "Inbox"
+                 :prepend t
+                 :template ("* %?"
+                            ":PROPERTIES:"
+                            ":Created: %U"
+                            ":END:"
+                            ""
+                            "%i"
+                            "%a"))
+                ("Research note" :keys "r"
+                 :file "~/org/tuntemus/org/20200629235044-batch_effect_research.org"
+                 :olp ("Report")
+                 :datetree t
+                 :template ("* %? %U"
+                            ":PROPERTIES:"
+                            ":Created: %U"
+                            ":END:"
+                            ""))
+                ("Cookbook" :keys "c"
+                 :file "~/org/cookbook.org"
+                 :template "%(org-chef-get-recipe-from-url)"
+                 :empty-lines 1)
+                ("Manual Cookbook" :keys "m"
+                 :file "~/org/cookbook.org"
+                 :template ("* %^{Recipe title: }"
+                            ":PROPERTIES:"
+                            ":source-url:"
+                            ":servings:"
+                            ":prep-time:"
+                            ":cook-time:"
+                            ":ready-in:"
+                            ":END:"
+                            "** Ingredients"
+                            "%?"
+                            "** Directions"
+                            ""
+                            ""))))))
+
+(use-package deft
+  :commands deft
+  :init
+  (setq deft-default-extension "org"
+        deft-recursive t
+        deft-directory org-directory
+        ;; de-couples filename and note title:
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t
+        ;; disable auto-save
+        deft-auto-save-interval -1.0
+        ;; converts the filter string into a readable file-name using kebab-case:
+        deft-file-naming-rules
+        '((noslash . "-")
+          (nospace . "-")
+          (case-fn . downcase)))
+  :config
+  (add-to-list 'deft-extensions "tex"))
+
+(defvar my-zotero-bib (concat (getenv "HOME")
+                              "/Disk/MEGA/zoteroLib.bib")
+  "Path to my zotero library")
+
+(setq
+  bibtex-completion-additional-search-fields '(keywords)
+  bibtex-completion-notes-path org-roam-directory
+  bibtex-completion-bibliography my-zotero-bib
+  bibtex-completion-pdf-field "file"
+  bibtex-completion-notes-template-multiple-files
+  (concat
+   "#+TITLE: ${title}\n"
+   "#+ROAM_KEY: cite:${=key=}\n"
+   "* TODO Notes\n"
+   ":PROPERTIES:\n"
+   ":Custom_ID: ${=key=}\n"
+   ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+   ":AUTHOR: ${author-abbrev}\n"
+   ":JOURNAL: ${journaltitle}\n"
+   ":DATE: ${date}\n"
+   ":YEAR: ${year}\n"
+   ":DOI: ${doi}\n"
+   ":URL: ${url}\n"
+   ":END:\n\n"))
+
+(use-package! org-ref
+    :config
+    (setq
+     org-ref-completion-library 'org-ref-ivy-cite
+     org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+     org-ref-default-bibliography (list my-zotero-bib)
+     ;; org-ref-bibliography-notes "/home/haozeke/Git/Gitlab/Mine/Notes/bibnotes.org"
+     org-ref-note-title-format (concat
+                                "* TODO %y - %t\n"
+                                " :PROPERTIES:\n"
+                                " :Custom_ID: %k\n"
+                                " :NOTER_DOCUMENT: %F\n"
+                                " :ROAM_KEY: cite:%k\n"
+                                " :AUTHOR: %9a\n"
+                                " :JOURNAL: %j\n"
+                                " :YEAR: %y\n"
+                                " :VOLUME: %v\n"
+                                " :PAGES: %p\n"
+                                " :DOI: %D\n"
+                                " :URL: %U\n"
+                                " :END:\n\n")
+     org-ref-notes-directory org-roam-directory
+     org-ref-notes-function 'orb-edit-notes))
+
+(after! org-ref
+  (setq bibtex-dialect 'biblatex))
+
+(use-package! org-roam-server
+  :after org-roam
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8189
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+(setq orb-note-actions-frontend 'helm)
+(setq org-preformat-keywords
+      '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+(setq orb-templates
+      `(("n" "ref + noter" plain (function org-roam-capture--get-point)
+         ""
+         :file-name "${slug}"
+         :head ,(mapconcat
+                  (function (lambda (x) x))
+                  '("#+TITLE: ${citekey}: ${title}"
+                    "#+ROAM_KEY: ${ref}"
+                    ""
+                    "- tags ::"
+                    ;; "- keywords :: ${keywords}"
+                    ""
+                    "* ${title}"
+                    "  :PROPERTIES:"
+                    "  :Custom_ID: ${citekey}"
+                    "  :URL: ${url}"
+                    "  :AUTHOR: ${author-or-editor}"
+                    "  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+                    "  :NOTER_PAGE:"
+                    "  :END:"
+                    "")
+                  "\n"))))
+
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   ;; The WM can handle splits
+   ;; org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; Everything is relative to the main notes file
+   org-noter-notes-search-path (list org-roam-directory)))
+
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+              '("empty"
+                "\\documentclass{extarticle}
+                [NO-DEFAULT-PACKAGES]
+                [NO-PACKAGES]"
+                ("\\section{%s}" . "\\section*{%s}")
+                ("\\subsection{%s}" . "\\subsection*{%s}")
+                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("empty-beamer" "\\documentclass[presentation]{beamer}
+                 [NO-DEFAULT-PACKAGES]
+                 [NO-PACKAGES]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (setq org-latex-listings 'minted
+        org-latex-packages-alist '(("" "minted")))
+  (setq org-latex-pdf-process
+        '("latexmk -%latex -shell-escape -interaction=nonstopmode -bibtex %f"))
+  (setq org-latex-to-pdf-process
+       (setq org-pandoc-options-for-latex-pdf
+             '((pdf-engine-opt . "-shell-escape")
+               (filter . "pandoc-minted")
+               (pdf-engine . "xelatex")))))
+
+(after! org
+    ;; Math preview
+  (setq org-preview-latex-default-process 'dvisvgm)
+  (setq org-preview-latex-process-alist
+        '((dvipng :programs
+                  ("xelatex" "dvipng")
+                  :description "dvi > png" :message "you need to install the programs: latex and dvipng."
+                  :image-input-type "xdv" :image-output-type "png" :image-size-adjust
+                  (1.0 . 1.0)
+                  :latex-compiler
+                  ("xelatex -no-pdf -interaction nonstopmode -output-directory %o %f")
+                  :image-converter
+                  ("dvipng -D %D -T tight -o %O %f"))
+          (dvisvgm :programs
+                   ("xelatex" "dvisvgm")
+                   :description "dvi > svg"
+                   :message "you need to install the programs: latex and dvisvgm."
+                   :image-input-type "xdv"
+                   :image-output-type "svg"
+                   :image-size-adjust (1.7 . 1.5)
+                   :latex-compiler
+                   ("xelatex -no-pdf -interaction nonstopmode -output-directory %o %f")
+                   :image-converter
+                   ("dvisvgm %f -n -b min -c %S -o %O"))
+          (imagemagick :programs
+                       ("xelatex" "convert")
+                       :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+                       (1.0 . 1.0)
+                       :latex-compiler
+                       ("xelatex -interaction nonstopmode -output-directory %o %f")
+                       :image-converter
+                       ("convert -density %D -trim -antialias %f -quality 100 %O")))))
+
+;;;;;;;;;;;;;
+;; Journal ;;
+;;;;;;;;;;;;;
+
+(use-package! org-journal
+    :config
+    (setq org-journal-dir (concat org-directory "/journal/")
+          org-journal-file-type 'yearly))
+
+;;;;;;;;;;;;;;;
+;; Org-crypt ;;
+;;;;;;;;;;;;;;;
+
+(after! org-crypt
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+  (setq org-crypt-key "63764A79CEF341C10BDD0D1DB937D911DDB86D36"))
+
+(setq +mu4e-backend 'offlineimap)
+
+(set-email-account! "MainMail"
+  `((mu4e-sent-folder       . "/mainmail/Sent Mail")
+    (mu4e-drafts-folder     . "/mainmail/Drafts")
+    (mu4e-trash-folder      . "/mainmail/Trash")
+    (mu4e-refile-folder     . "/mainmail/All Mail")
+    (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
+    (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
+    (mu4e-compose-signature . "---"))
+  t)
+
+(set-email-account! "EduPolitech"
+  `((mu4e-sent-folder       . "/edu-politech/Sent Mail")
+    (mu4e-drafts-folder     . "/edu-politech/Drafts")
+    (mu4e-trash-folder      . "/edu-politech/Trash")
+    (mu4e-refile-folder     . "/edu-politech/All Mail")
+    (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/edu-politech"))
+    (user-mail-address      . ,(auth-source-pass-get "user" "mail/edu-politech"))
+    (mu4e-compose-signature . "---")))
+
+(set-email-account! "Paradox"
+  `((mu4e-sent-folder       . "/paradox/Sent Mail")
+    (mu4e-drafts-folder     . "/paradox/Drafts")
+    (mu4e-trash-folder      . "/paradox/Trash")
+    (mu4e-refile-folder     . "/paradox/All Mail")
+    (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
+    (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
+    (mu4e-compose-signature . "---")))
+
+;;;;;;;;;;
+;; YADM ;;
+;;;;;;;;;;
+
+(require 'tramp)
+(add-to-list 'tramp-methods
+ '("yadm"
+   (tramp-login-program "yadm")
+   (tramp-login-args (("enter")))
+   (tramp-login-env (("SHELL") ("/bin/sh")))
+   (tramp-remote-shell "/bin/sh")
+   (tramp-remote-shell-args ("-c"))))
+
+(defun yadm-git ()
+  (interactive)
+  (magit-status "/yadm::"))
+(map! :leader
+      :prefix "g"
+      :desc "yadm" "m" 'yadm-git)
+
+;;;;;;;;;;;;
+;; Python ;;
+;;;;;;;;;;;;
+
+(after! python
+  (add-hook 'before-save-hook 'py-isort-before-save)
+  (add-hook 'python-mode-hook 'py-yapf-enable-on-save))
