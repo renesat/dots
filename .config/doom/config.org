@@ -1,7 +1,12 @@
 #+TITLE: YADEC (Yet Another Doom Emacs Config)
 #+SETUPFILE: templates/theme-readtheorg.setup
+#+STARTUP: overview
 
 * TOC :toc:
+:PROPERTIES:
+:VISIBILITY: all
+:END:
+
 - [[#general-settings][General settings]]
   - [[#general-keys][General keys]]
   - [[#appearance][Appearance]]
@@ -19,6 +24,7 @@
   - [[#org-crypt][Org-crypt]]
 - [[#mail][Mail]]
 - [[#yadm][YADM]]
+- [[#activity-watch][Activity Watch]]
 - [[#languages-support][Languages support]]
   - [[#python][Python]]
 
@@ -570,6 +576,12 @@ Config for dots manager ([[https://yadm.io/][Yet Another Dotfiles Manager (YADM)
 (map! :leader
       :prefix "g"
       :desc "yadm" "m" 'yadm-git)
+#+END_SRC
+
+* Activity Watch
+
+#+BEGIN_SRC elisp
+(add-hook 'after-init-hook #'global-activity-watch-mode)
 #+END_SRC
 
 * Languages support

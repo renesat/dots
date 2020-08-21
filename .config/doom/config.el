@@ -448,6 +448,8 @@
       :prefix "g"
       :desc "yadm" "m" 'yadm-git)
 
+(add-hook 'after-init-hook #'global-activity-watch-mode)
+
 ;;;;;;;;;;;;
 ;; Python ;;
 ;;;;;;;;;;;;
