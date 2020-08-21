@@ -69,8 +69,20 @@
 (package! mu4e-alert)
 (package! khardel)
 
+;;;;;;;;;;;;;;;;;;;;
+;; Activity watch ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(package! activity-watch-mode)
+
 ;;;;;;;;;;;;;;;;
 ;; Web search ;;
 ;;;;;;;;;;;;;;;;
 
 ;; (package! engine-mode)
+
+;;;;;;;;;;;;;;;;
+;; Large file ;;
+;;;;;;;;;;;;;;;;
+
+(package! vlf)
