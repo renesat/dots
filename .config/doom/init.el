@@ -166,6 +166,7 @@
         +dragndrop       ; file drag & drop support
         +pomodoro
         +pandoc          ; pandoc integration into org's exporter
+        +pretty
         +present)        ; using Emacs for presentations
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
@@ -218,4 +219,3 @@
        ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
        ;; config. Use it as a reference for your own modules.
        (default +bindings +smartparens))
-
