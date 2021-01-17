@@ -1,5 +1,21 @@
-{-# LANGUAGE DeriveDataTypeable, TypeSynonymInstances, MultiParamTypeClasses #-}
+#+TITLE: My Xmonad config
+#+PROPERTY: header-args :tangle xmonad.hs
 
+* TOC :toc:noexport:
+- [[#haskell-extension][Haskell extension]]
+- [[#libraries][Libraries]]
+- [[#main][Main]]
+- [[#color][Color]]
+- [[#parameters][Parameters]]
+
+* Haskell extension
+#+begin_src haskell
+{-# LANGUAGE DeriveDataTypeable, TypeSynonymInstances, MultiParamTypeClasses #-}
+#+end_src
+
+* Libraries
+
+#+begin_src haskell
 --
 -- Main {{
 import XMonad
@@ -67,7 +83,11 @@ import Data.Map.Strict (Map)
 import XMonad.Hooks.SetWMName (setWMName)
 
 import XMonad.Util.Run (safeSpawn)
+#+end_src
 
+* Main
+
+#+begin_src haskell
 main :: IO()
 main = do
   xmonad
@@ -91,7 +111,11 @@ main = do
   navConf = def
     { Nav.defaultTiledNavigation = centerNavigation
     }
+#+end_src
 
+* Color
+
+#+begin_src haskell
 ------------
 -- Color --
 ------------
@@ -101,21 +125,35 @@ myNormalBorderColor  = "#3b4252"
 
 myFocusedBorderColor :: String
 myFocusedBorderColor = "#b48ead"
+#+end_src
 
+* Parameters
+#+begin_src haskell
 ----------------
 -- Parameters --
 ----------------
 myTerminal = "kitty"
+#+end_src
 
+As a lock screen I use beautiful [[https://github.com/pavanjadhaw/betterlockscreen][betterlockscreen]]:
+#+begin_src haskell
 lockScreen :: String
 lockScreen = "betterlockscreen -l" -- lockScreen
+#+end_src
 
+As a application menu I use dmenu alternatibe - [[https://github.com/davatorium/rofi][rofi]]:
+#+begin_src haskell
 appMenu :: String
 appMenu = "rofi -show combi" -- application menu
+#+end_src
 
+
+#+begin_src haskell
 fileManager :: String
 fileManager = terminalExecCommand myTerminal "env ranger" -- File manager
+#+end_src
 
+#+begin_src haskell
 browser :: String
 browser = "firefox" -- Browser
 
@@ -129,6 +167,9 @@ screenshot = "scrot -m " ++ screenshotPath
 
 scriptsPath :: String
 scriptsPath = "~/scripts"
+#+end_src
+
+#+begin_src haskell
 
 -----------
 -- Utils --
@@ -303,3 +344,6 @@ scratchpads :: [NamedScratchpad]
 scratchpads =
   [ NS "tray" "stalonetray" (className =? "stalonetray") defaultFloating
   ]
+
+
+#+end_src
