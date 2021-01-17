@@ -1,4 +1,4 @@
-"
+
 "-- Base config --"
 "
 
@@ -61,6 +61,8 @@ set hidden
 " -- Plugin configs -- "
 "
 call plug#begin()
+
+  Plug 'arcticicestudio/nord-vim'
 
   " -- Sudo save -- "
   Plug 'lambdalisue/suda.vim'
@@ -332,3 +334,4 @@ augroup haskell_lsp
   au! FileType haskell let b:ale_linters = ['brittany', 'floskell', 'hdevtools', 'hfmt', 'hie', 'hlint', 'stack-build', 'stack-ghc', 'stylish-haskell']
 augroup END
 
+colorscheme nord
