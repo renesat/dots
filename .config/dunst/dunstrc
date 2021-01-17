@@ -2,6 +2,8 @@
 [global]
     font = mononoki 12
 
+    show_icons = left
+    icon_position = left
     # allow a small subset of html markup:
     # <b>bold</b>
     # <i>italic</i>
@@ -197,17 +199,12 @@ format = ""
 frame_color = "#E5E9F0"
 separator_color = "#E5E9F0"
 
-[base16_low]
-    msg_urgency = low
-    background = "#3B4252"
-    foreground = "#4C566A"
-
-[base16_normal]
+[normal]
     msg_urgency = normal
     background = "#434C5E"
-    foreground = "#E5E9F0"
+    foreground = "#ECEFF4"
 
-[base16_critical]
+[critical]
     msg_urgency = critical
-    background = "#88C0D0"
+    background = "#BF616A"
     foreground = "#ECEFF4"
