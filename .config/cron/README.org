@@ -1,0 +1,128 @@
+#+TITLE: MCRON
+
+#+begin_src elisp :results none
+(setq geiser-scheme-implementation 'guile)
+#+end_src
+
+* Common functions
+:PROPERTIES:
+:header-args: :tangle "common.guile"
+:END:
+
+#+begin_src scheme
+(define (create-command bin-path parameters)
+  (string-append
+   bin-path
+   " "
+   (fold
+    (lambda (s x)
+      (string-append s " " x))
+    ""
+    (map
+     (lambda (parameter)
+       (string-append
+        (car parameter)
+        " "
+        (cadr parameter)))
+     parameters))))
+#+end_src
+
+* ledger
+:PROPERTIES:
+:header-args: :tangle "ledger.guile"
+:END:
+
+Import common functions:
+#+begin_src scheme
+(load-from-path "/home/renesat/.config/cron/common.guile")
+#+end_src
+
+Get main path:
+#+begin_src scheme
+(define finance-path
+  (string-append (getenv "HOME")
+                 "/Finance"))
+#+end_src
+
+#+begin_src scheme
+(job
+ '(next-hour '(10 22))
+ (string-append
+  (create-command
+   "/home/renesat/scripts/getprice.py" (list
+                                        (list "-c" "USD,EUR,ILS")))
+  " >> "
+  finance-path "/price.dat"))
+
+#+end_src
+
+
+* MEMACS
+:PROPERTIES:
+:header-args: :tangle "memacs.guile"
+:END:
+
+Import common functions:
+#+begin_src scheme
+(load-from-path "/home/renesat/.config/cron/common.guile")
+#+end_src
+
+
+Get main path with memacs files:
+#+begin_src scheme
+(define memacs-path
+  (string-append (getenv "HOME")
+                 "/org/memacs"))
+#+end_src
+
+** Battery
+
+#+begin_src scheme
+(job
+ '(next-minute (range 0 60 5))
+ (create-command
+  "/home/renesat/.anaconda3/bin/memacs_battery" (list
+                                                  (list "--battery" "BAT")
+                                                  (list "--output-format" "\"{battery.name} {battery.status}: {battery.capacity}%\"")
+                                                  (list "-o " (string-append memacs-path "/battery.org_archive"))
+                                                  (list "-a" ""))))
+#+end_src
+
+** SMS
+#+begin_src scheme
+(job '(next-hour '(23))
+     (string-append
+      "for f in /home/renesat/Sync/SMS/sms-*.xml; do\n"
+      "/home/renesat/.anaconda3/bin/memacs_sms" (string-append
+                                                 " -f $f"
+                                                 " -o " memacs-path "/sms.org_archive"
+                                                 " -a")
+      "\n"
+      "done"))
+#+end_src
+
+
+** Calls
+#+begin_src scheme
+(job '(next-hour '(23))
+     (string-append
+      "for f in /home/renesat/Sync/SMS/calls-*.xml; do\n"
+      "/home/renesat/.anaconda3/bin/memacs_phonecalls" (string-append
+                                                        " -f $f"
+                                                        " -o " memacs-path "/calls.org_archive"
+                                                        " -a")
+      "\n"
+      "done"))
+#+end_src
+
+** Mail
+
+#+begin_src scheme
+(job '(next-hour '(23))
+     (string-append
+      "/home/renesat/.anaconda3/bin/memacs_mumail" (string-append
+                                                    " -q \"mu find maildir:'/'/\""
+                                                    " -m all" ;FIX
+                                                    " -o " memacs-path "/all_mail.org_archive"
+                                                    " -a")))
+#+end_src

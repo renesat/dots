@@ -1,0 +1,15 @@
+(define (create-command bin-path parameters)
+  (string-append
+   bin-path
+   " "
+   (fold
+    (lambda (s x)
+      (string-append s " " x))
+    ""
+    (map
+     (lambda (parameter)
+       (string-append
+        (car parameter)
+        " "
+        (cadr parameter)))
+     parameters))))

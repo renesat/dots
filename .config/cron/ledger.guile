@@ -1,0 +1,14 @@
+(load-from-path "/home/renesat/.config/cron/common.guile")
+
+(define finance-path
+  (string-append (getenv "HOME")
+                 "/Finance"))
+
+(job
+ '(next-hour '(23 10))
+ (string-append
+  (create-command
+   "/home/renesat/scripts/getprice.py" (list
+                                        (list "-c" "USD,EUR,ILS")))
+  " >> "
+  finance-path "/price.dat"))

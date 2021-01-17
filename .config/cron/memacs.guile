@@ -1,0 +1,42 @@
+(load-from-path "/home/renesat/.config/cron/common.guile")
+
+(define memacs-path
+  (string-append (getenv "HOME")
+                 "/org/memacs"))
+
+(job
+ '(next-minute (range 0 60 5))
+ (create-command
+  "/home/renesat/.anaconda3/bin/memacs_battery" (list
+                                                  (list "--battery" "BAT")
+                                                  (list "--output-format" "\"{battery.name} {battery.status}: {battery.capacity}%\"")
+                                                  (list "-o " (string-append memacs-path "/battery.org_archive"))
+                                                  (list "-a" ""))))
+
+(job '(next-hour '(23))
+     (string-append
+      "for f in /home/renesat/Sync/SMS/sms-*.xml; do\n"
+      "/home/renesat/.anaconda3/bin/memacs_sms" (string-append
+                                                 " -f $f"
+                                                 " -o " memacs-path "/sms.org_archive"
+                                                 " -a")
+      "\n"
+      "done"))
+
+(job '(next-hour '(23))
+     (string-append
+      "for f in /home/renesat/Sync/SMS/calls-*.xml; do\n"
+      "/home/renesat/.anaconda3/bin/memacs_phonecalls" (string-append
+                                                        " -f $f"
+                                                        " -o " memacs-path "/calls.org_archive"
+                                                        " -a")
+      "\n"
+      "done"))
+
+(job '(next-hour '(23))
+     (string-append
+      "/home/renesat/.anaconda3/bin/memacs_mumail" (string-append
+                                                    " -q \"mu find maildir:'/'/\""
+                                                    " -m all" ;FIX
+                                                    " -o " memacs-path "/all_mail.org_archive"
+                                                    " -a")))
