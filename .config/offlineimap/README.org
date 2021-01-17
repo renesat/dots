@@ -21,7 +21,7 @@ from subprocess import check_output
 def get_pass(account):
     """ Return pass login and passwword
     """
-    data = check_output("/usr/bin/env pass mail/" + account,
+    data = check_output("/usr/bin/env gopass show mail/" + account,
                         shell=True).splitlines()
     password = data[0]
     tmp = [
